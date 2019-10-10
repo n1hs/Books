@@ -1,0 +1,135 @@
+﻿<MahApp:MetroWindow x:Class="BookStoreManagement.Views.ShellView"
+                    xmlns:MahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cal="http://www.caliburnproject.org"
+                    BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                    NonActiveBorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                    WindowTitleBrush="{DynamicResource PrimaryHueMidBrush}"
+                    Background="{DynamicResource MaterialDesignPaper}"
+                    TextElement.FontWeight="Regular"
+                    TextElement.FontSize="14"
+                    TextOptions.TextFormattingMode="Ideal"
+                    TextOptions.TextRenderingMode="Auto"
+                    WindowStartupLocation="CenterScreen"
+                    Title="  "
+                    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    MinHeight="500"
+                    MinWidth="800"
+                    Height="650"
+                    Width="1000">
+    <md:DialogHost IsOpen="{Binding IsDialogOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   DialogContent="{Binding DialogContent, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <md:ColorZone Mode="PrimaryMid"
+                          Grid.ColumnSpan="3"
+                          Padding="16 0 16 16"
+                          md:ShadowAssist.ShadowEdges="Bottom"
+                          md:ShadowAssist.ShadowDepth="Depth3">
+                <DockPanel>
+                    <TextBlock Style="{DynamicResource MaterialDesignSubheadingTextBlock}"
+                               VerticalAlignment="Center"
+                               Visibility="{Binding IsLog, Converter={StaticResource BooleanToVisibility}}"
+                               DockPanel.Dock="Right"
+                               Margin="5 0">
+                        <Run Text="Xin chào" />
+                        <Run Text="{Binding User}" />
+                    </TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <ToggleButton x:Name="HaburgerButton"
+                                      IsChecked="False"
+                                      Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
+                        <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                                   Margin="15 0"
+                                   Text="Quản lý nhà sách" />
+
+                    </StackPanel>
+                </DockPanel>
+            </md:ColorZone>
+            <md:Card UniformCornerRadius="0"
+                     IsEnabled="{Binding IsMenuEnable, Mode=OneWay}"
+                     md:ShadowAssist.ShadowEdges="Right"
+                     md:ShadowAssist.ShadowDepth="Depth3"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Grid.Row="1"
+                     Grid.RowSpan="2"
+                     Visibility="{Binding IsLog, Converter={StaticResource BooleanToVisibility}}"
+                     Background="{DynamicResource PrimaryHueMidBrush}">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Menu Background="{DynamicResource PrimaryHueMidBrush}">
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <MenuItem Header="Quản lý"      
+                                  Template="{StaticResource TopItemTemplate}"
+                                  Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibility}}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('0')]"
+                                  Icon="{md:PackIcon Kind=SettingsApplications, Size=24}" />
+                        <MenuItem Header="Hóa đơn"
+                                  Template="{StaticResource TopItemTemplate}"
+                                  Visibility="{Binding IsEmployees, Converter={StaticResource BooleanToVisibility}}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('0')]"
+                                  Icon="{md:PackIcon Kind=Details, Size=24}" />
+                        <MenuItem Header="Thống kê"
+                                  Template="{StaticResource TopItemTemplate}"
+                                  Visibility="{Binding IsEmployees, Converter={StaticResource BooleanToVisibility}}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('0')]"
+                                  Icon="{md:PackIcon Kind=Kickstarter, Size=24}" />
+                        <MenuItem Header="Thong tin khách hàng"
+                                  Visibility="{Binding IsCustomer, Converter={StaticResource BooleanToVisibility}}"
+                                  Template="{StaticResource TopItemTemplate}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('0')]"
+                                  Icon="{md:PackIcon Kind=Account, Size=24}" />
+                        <MenuItem Header="Tìm sách"
+                                  Template="{StaticResource TopItemTemplate}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('FindBook')]"
+                                  Icon="{md:PackIcon Kind=Search, Size=24}" />
+                    </Menu>
+                    <Menu Grid.Row="1"
+                          Background="{DynamicResource PrimaryHueMidBrush}">
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <MenuItem Header="Cài đặt"
+                                  Template="{StaticResource TopItemTemplate}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('Settings')]"
+                                  Icon="{md:PackIcon Kind=Settings, Size=24}" />
+                        <MenuItem Header="About Us"
+                                  Template="{StaticResource TopItemTemplate}"
+                                  cal:Message.Attach="[Event Click] = [Action NavigateToView('About')]"
+                                  Icon="{md:PackIcon Kind=About, Size=24}" />
+                    </Menu>
+
+                </Grid>
+            </md:Card>
+
+            <Frame Grid.Column="1"
+                   Grid.Row="1"
+                   Margin="10"
+                   NavigationUIVisibility="Hidden"
+                   cal:Message.Attach="RegisterFrame($source)"
+                   HorizontalContentAlignment="Stretch"
+                   VerticalContentAlignment="Stretch"
+                   DataContext="{x:Null}" />
+
+        </Grid>
+    </md:DialogHost>
+</MahApp:MetroWindow>

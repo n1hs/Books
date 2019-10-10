@@ -1,0 +1,172 @@
+﻿<Page x:Class="BookStoreManagement.Views.MainPage.FindBookView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Background="{DynamicResource MaterialDesignBackground}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="14"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      xmlns:cal="http://www.caliburnproject.org"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="450"
+      d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Tìm kiếm"
+                  Grid.ColumnSpan="2"
+                  Style="{DynamicResource MaterialDesignCardGroupBox}"
+                  Margin="16">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Margin="8,0,0,0"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                               Text="{Binding}" />
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox md:HintAssist.Hint="Nhập từ khóa tìm kiếm"
+                         Text="{Binding SearchKey, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                </TextBox>
+                <ComboBox Width="150" 
+                          x:Name="SearchBy"
+                          SelectedIndex="{Binding SearchBy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="8 0"
+                          VerticalAlignment="Bottom"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          Grid.Column="1"
+                          md:HintAssist.Hint="Tìm theo">
+                    <ComboBoxItem>
+                        Tất cả
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Mã sách
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Tên Sách
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Tác giả
+                    </ComboBoxItem>
+                </ComboBox>
+
+                <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                        Width="100"
+                        cal:Message.Attach="Search()"
+                        VerticalAlignment="Bottom"
+                        Height="40"
+                        Grid.Column="2"
+                        DockPanel.Dock="Right"
+                        Margin="10">
+                    Tìm
+                </Button>
+
+            </Grid>
+        </GroupBox>
+
+        <md:Card Margin="10 0"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Grid.Row="1">
+            <ListBox ItemsSource="{Binding ListBooks, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                     x:Name="ListBook"
+                     Background="Transparent"
+                     SelectionMode="Single"
+                     SelectedItem="{Binding SelectedBook}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.Style>
+                    <Style TargetType="ListBox">
+                        <Setter Property="ItemContainerStyle">
+                            <Setter.Value>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background"
+                                            Value="Transparent" />
+                                    <Setter Property="Margin"
+                                            Value="8" />
+                                </Style>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.Style>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <md:Badged Badge="{Binding Left}"
+                                   Background="Transparent"
+                                   BadgeColorZoneMode="Accent">
+                            <StackPanel Width="110"
+                                        Height="160">
+                                <Image Source="{Binding Image}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Width="100"
+                                       Height="140" />
+                                <TextBlock TextWrapping="Wrap"
+                                           Text="{Binding Title}"
+                                           FontSize="12"
+                                           Margin="5">
+                                </TextBlock>
+                            </StackPanel>
+                        </md:Badged>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </md:Card>
+
+        <md:Card Grid.Column="1"
+                 MaxWidth="200"
+                 VerticalAlignment="Center"
+                 Visibility="{Binding RighPaneVisibility, Mode=OneWay}"
+                 Grid.Row="1">
+            <StackPanel HorizontalAlignment="Center"
+                        Margin="15"
+                        VerticalAlignment="Center">
+                <Image Source="{Binding ElementName=ListBook, Path=SelectedItem.Image}" />
+                <TextBlock TextWrapping="Wrap"
+                           Margin="5"
+                           Text="{Binding ElementName=ListBook, Path=SelectedItem.Title}" />
+                <TextBlock TextWrapping="Wrap"
+                           Margin="5">
+                                        <Run Text="Tác giả:" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Author}" />
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap"
+                           Margin="5">
+                                        <Run Text="Nhà xuất bản:" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Publisher}" />
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap"
+                           Margin="5">
+                                        <Run Text="Còn :" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Left}" />
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap"
+                           Margin="5">
+                                        <Run Text="Vị trí:" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Location}" />
+                </TextBlock>
+
+            </StackPanel>
+        </md:Card>
+    </Grid>
+</Page>
