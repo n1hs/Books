@@ -5,6 +5,7 @@ namespace BookStoreManagement.StartUp {
     using BookStoreManagement.ViewModels.OptionsPage;
     using BookStoreManagement.ViewModels.MainPage;
     using Caliburn.Micro;
+    using BookStoreManagement.Models;
 
     public class AppBootstrapper : BootstrapperBase {
         SimpleContainer container;
@@ -19,7 +20,7 @@ namespace BookStoreManagement.StartUp {
 
             container.Singleton<IWindowManager, WindowManager>();
             container.Singleton<IEventAggregator, EventAggregator>();
-            container.Singleton<Models.DataProvider>();
+            container.Singleton<DataProvider>();
             container.PerRequest<IShell, ShellViewModel>();
             container.PerRequest<SettingsViewModel>();
             container.PerRequest<AboutViewModel>();

@@ -19,7 +19,7 @@ namespace BookStoreManagement.ViewModels.MainPage
                 if (string.IsNullOrEmpty(value))
                 {
                     searchBooks = null;
-                    ListBooks = dataProvider.Books;
+                    ListBooks = dataProvider.BookReponsitory.Store;
                 }
             }
         }
@@ -35,10 +35,10 @@ namespace BookStoreManagement.ViewModels.MainPage
         }
 
 
-        private BindableCollection<Book> listBooks;
-        private BindableCollection<Book> searchBooks;     
+        private BindableCollection<Sach> listBooks;
+        private BindableCollection<Sach> searchBooks;     
 
-        public BindableCollection<Book> ListBooks
+        public BindableCollection<Sach> ListBooks
         {
             get { return listBooks; }
             set { listBooks = value;
@@ -79,7 +79,7 @@ namespace BookStoreManagement.ViewModels.MainPage
         public FindBookViewModel(DataProvider dataProvider)
         {
             this.dataProvider = dataProvider;
-            ListBooks = dataProvider.Books;
+            ListBooks = dataProvider.BookReponsitory.Store;
         }
 
         public void Search()
@@ -89,16 +89,16 @@ namespace BookStoreManagement.ViewModels.MainPage
             switch(searchBy)
             {
                 case 0:
-                    searchBooks = new BindableCollection<Book>(listBooks.Where(x => x.Id.Contains(searchKey) || x.Title.Contains(searchKey) || x.Author.Contains(searchKey)).ToList());
+                    searchBooks = new BindableCollection<Sach>(listBooks.Where(x => x.MaSach.Contains(searchKey) || x.TenSach.Contains(searchKey) || x.TacGia.Contains(searchKey)).ToList());
                     break;
                 case 1:
-                    searchBooks = new BindableCollection<Book>(listBooks.Where(x => x.Id.Contains(searchKey)).ToList());
+                    searchBooks = new BindableCollection<Sach>(listBooks.Where(x => x.MaSach.Contains(searchKey)).ToList());
                     break;
                 case 2:
-                    searchBooks = new BindableCollection<Book>(listBooks.Where(x => x.Title.Contains(searchKey)).ToList());
+                    searchBooks = new BindableCollection<Sach>(listBooks.Where(x => x.TenSach.Contains(searchKey)).ToList());
                     break;
                 case 3:
-                    searchBooks = new BindableCollection<Book>(listBooks.Where(x => x.Author.Contains(searchKey)).ToList());
+                    searchBooks = new BindableCollection<Sach>(listBooks.Where(x => x.TacGia.Contains(searchKey)).ToList());
                     break;
             }
             ListBooks = searchBooks;

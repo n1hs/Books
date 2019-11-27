@@ -5,62 +5,49 @@ namespace BookStoreManagement.Models
 {
     public class DataProvider
     {
-        public BindableCollection<Book> Books { get; set; }
-        public DataProvider()
-        {
-            Books = new BindableCollection<Book>()
+        public string UserName { get; private set; }
+        public bool IsAdmin { get; private set; }
+        public bool IsEmploy { get; private set; }
+        public bool IsCustomer { get; private set; }
+        public bool IsGuest { get; private set; }
+
+        private IReponsitory<Sach> _bookReponsitory;
+        public IReponsitory<Sach> BookReponsitory { 
+            get
             {
-                new Book()
+                if (_bookReponsitory is null)
+                    _bookReponsitory = new BookReponsitory();
+                return _bookReponsitory;
+            } 
+        }
+        private IReponsitory<NhanVien> _accountReponsitory;
+        public IReponsitory<NhanVien> AccountReponsitory {
+            get
+            {
+                if (_accountReponsitory is null)
+                    _accountReponsitory = new AccountRepensitory();
+                return _accountReponsitory;
+            }
+        }
+        internal void CheckAccount(string User, string Password)
+        {
+            if(AccountReponsitory.Store == null)
+            {
+                AccountReponsitory.GetAll();
+            }
+            NhanVien nhanVien = AccountReponsitory.Find(User);
+            if (nhanVien != null)
+            {
+                UserName = nhanVien.UserName;
+                if(nhanVien.QuanLy == true)
                 {
-                    Id = "01",
-                    Title = "Sự im lặng của bày cừu.",
-                    Author = "Thomas Harris",
-                    Publisher = "None",
-                    Left=99,
-                    Location="Kệ 1",
-                    Image=@"pack://application:,,,/BookStoreManagement;component/Resources/Img/1.png"
-                },
-                new Book()
-                {
-                    Id = "02",
-                    Title = "2 vạn dặm dưới đáy biển (Twenty Thousand Leagues Under The Sea).",
-                    Author = "Jules Verne",
-                    Publisher = "None",
-                    Left=99,
-                    Location="Kệ 2",
-                    Image=@"pack://application:,,,/BookStoreManagement;component/Resources/Img/2.png"
-                },
-                new Book()
-                {
-                    Id = "03",
-                    Title = "Start With Why.",
-                    Author = "Simon Sinek ",
-                    Publisher = "None",
-                    Left=99,
-                    Location="Kệ 1",
-                    Image=@"pack://application:,,,/BookStoreManagement;component/Resources/Img/3.png"
-                },
-                new Book()
-                {
-                    Id = "04",
-                    Title = "Mặc Kệ Thiên Hạ.",
-                    Author = "Mari Tamagawa",
-                    Publisher = "None",
-                    Left=99,
-                    Location="Kệ 1",
-                    Image=@"pack://application:,,,/BookStoreManagement;component/Resources/Img/4.png"
-                },
-                new Book()
-                {
-                    Id = "05",
-                    Title = "Đời Đơn Giản Khi Ta Đơn Giản.",
-                    Author = "Xuân Nguyễn",
-                    Publisher = "None",
-                    Left=99,
-                    Location="Kệ 1",
-                    Image=@"pack://application:,,,/BookStoreManagement;component/Resources/Img/5.png"
+                    IsAdmin = true;
                 }
-            };
+                IsEmploy = true;
+                return;
+            }
+            UserName = string.Empty;
+            IsGuest = true;
         }
     }
 }

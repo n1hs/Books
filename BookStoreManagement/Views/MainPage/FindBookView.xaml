@@ -111,18 +111,18 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <md:Badged Badge="{Binding Left}"
+                        <md:Badged Badge="{Binding TonDau}"
                                    Background="Transparent"
                                    BadgeColorZoneMode="Accent">
                             <StackPanel Width="110"
                                         Height="160">
-                                <Image Source="{Binding Image}"
+                                <Image Source="{Binding Anh}"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
                                        Width="100"
                                        Height="140" />
                                 <TextBlock TextWrapping="Wrap"
-                                           Text="{Binding Title}"
+                                           Text="{Binding TenSach}"
                                            FontSize="12"
                                            Margin="5">
                                 </TextBlock>
@@ -141,14 +141,14 @@
             <StackPanel HorizontalAlignment="Center"
                         Margin="15"
                         VerticalAlignment="Center">
-                <Image Source="{Binding ElementName=ListBook, Path=SelectedItem.Image}" />
+                <Image Source="{Binding ElementName=ListBook, Path=SelectedItem.Anh}" />
                 <TextBlock TextWrapping="Wrap"
                            Margin="5"
-                           Text="{Binding ElementName=ListBook, Path=SelectedItem.Title}" />
+                           Text="{Binding ElementName=ListBook, Path=SelectedItem.TenSach}" />
                 <TextBlock TextWrapping="Wrap"
                            Margin="5">
                                         <Run Text="Tác giả:" />
-                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Author}" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.TacGia}" />
                 </TextBlock>
                 <TextBlock TextWrapping="Wrap"
                            Margin="5">
@@ -158,12 +158,12 @@
                 <TextBlock TextWrapping="Wrap"
                            Margin="5">
                                         <Run Text="Còn :" />
-                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Left}" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.TonDau}" />
                 </TextBlock>
                 <TextBlock TextWrapping="Wrap"
                            Margin="5">
                                         <Run Text="Vị trí:" />
-                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.Location}" />
+                                        <Run Text="{Binding ElementName=ListBook, Path=SelectedItem.ViTri}" />
                 </TextBlock>
 
             </StackPanel>
