@@ -19,16 +19,16 @@ namespace BookStoreManagement.Models
             throw new NotImplementedException();
         }
 
-        public void Edit(NhanVien item, object key)
+        public void Edit(NhanVien item, string key)
         {
             throw new NotImplementedException();
         }
 
-        public NhanVien Find(object key)
+        public NhanVien Find(string key)
         {
             try
             {
-                return Store.Single(x => x.UserName == key);
+                return Store.Where(x => x.UserName.ToLower() == key.ToLower()).FirstOrDefault();
             }
             catch
             {

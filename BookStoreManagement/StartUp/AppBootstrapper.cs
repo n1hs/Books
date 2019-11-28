@@ -25,7 +25,7 @@ namespace BookStoreManagement.StartUp {
             container.PerRequest<SettingsViewModel>();
             container.PerRequest<AboutViewModel>();
             container.PerRequest<FindBookViewModel>();
-
+            container.PerRequest<HomeViewModel>();
             container.PerRequest<ErrorViewModel>();
 
         }

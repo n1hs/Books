@@ -4,7 +4,10 @@ using Caliburn.Micro;
 using BookStoreManagement.StartUp;
 using BookStoreManagement.ViewModels.OptionsPage;
 using BookStoreManagement.ViewModels.MainPage;
-using System.Windows;
+using BookStoreManagement.Models;
+using System.Threading.Tasks;
+using MahApps.Metro.Controls;
+using MaterialDesignThemes.Wpf;
 
 namespace BookStoreManagement.ViewModels
 {
@@ -12,6 +15,7 @@ namespace BookStoreManagement.ViewModels
     {
         private SimpleContainer _container;
         private INavigationServiceEx navigationService;
+        private DataProvider dataProvider;
         #region Properties
         private UserControl dialogContent;
 
@@ -32,30 +36,30 @@ namespace BookStoreManagement.ViewModels
                 NotifyOfPropertyChange("IsDialogOpen");
             }
         }
-
-        private bool isMenuEnable = true;
-
-        public bool IsMenuEnable
+               
+        public bool IsSignin
         {
-            get { return isMenuEnable; }
-            set { isMenuEnable = value;
-                NotifyOfPropertyChange("IsMenuEnable");
-            }
+            get { return !dataProvider.IsGuest; }
+        }
+        public bool IsSignout
+        {
+            get { return dataProvider.IsGuest; }
         }
 
-        private bool isLog;
-
-        public bool IsLog
+        public bool IsCustomer {
+            get { return dataProvider.IsCustomer; }
+        }
+        public bool IsEmployees {
+            get { return dataProvider.IsEmploy; }
+        }
+        public bool IsAdmin { get { return dataProvider.IsAdmin; } }
+        public string Name
         {
-            get { return isLog; }
-            set { isLog = value;
-                NotifyOfPropertyChange("IsLog");
+            get
+            {
+                return dataProvider.UserName;
             }
         }
-
-        public bool IsCustomer { get; set; }
-        public bool IsEmployees { get; set; }
-        public bool IsAdmin { get; set; }
 
         private string user;
 
@@ -67,17 +71,72 @@ namespace BookStoreManagement.ViewModels
             }
         }
 
+        private string password;
+
+        public string Password
+        {
+            set { password = value;
+                NotifyOfPropertyChange("Password");
+            }
+        }
+
+        private bool loginButtonEnable;
+
+        public bool LoginButtonEnable
+        {
+            get { return loginButtonEnable; }
+            set { loginButtonEnable = value; NotifyOfPropertyChange("LoginButtonEnable"); }
+        }
+
+        private string loginMessage;
+
+        public string LoginMessage
+        {
+            get { return loginMessage; }
+            set {
+                loginMessage = value;
+                NotifyOfPropertyChange("LoginMessage");
+            }
+        }
+
+        private HamburgerMenuItemCollection menuItems;
+
+        public HamburgerMenuItemCollection MenuItems
+        {
+            get { return menuItems; }
+            set { menuItems = value;
+                NotifyOfPropertyChange("MenuItems");
+            }
+        }
+
+        private int menuSelectedIndex = -1;
+
+        public int MenuSelectedIndex
+        {
+            get { return menuSelectedIndex; }
+            set { menuSelectedIndex = value;
+                NotifyOfPropertyChange("MenuSelectedIndex");
+            }
+        }
 
 
 
         #endregion
 
-        public ShellViewModel(SimpleContainer container)
+        /// <summary>
+        /// Contruction 
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="dataProvider"></param>
+        public ShellViewModel(SimpleContainer container, DataProvider dataProvider)
         {
             this._container = container;
-            IsDialogOpen = true;
-            DialogContent = new Views.UserControl.Login();
-            DialogContent.DataContext = this;
+            this.dataProvider = dataProvider;
+            IsDialogOpen = false;
+            dataProvider.IsGuest = true;
+            dataProvider.UserName = "Khách";
+            MenuItems = new HamburgerMenuItemCollection();
+            SetMenuItemForGuest();
         }
 
         #region Methods
@@ -87,8 +146,6 @@ namespace BookStoreManagement.ViewModels
             navigationService = new NavigationService(frame);
 
             _container.Instance(navigationService);
-
-            //navigationService.NavigateToViewModel(typeof(ProfileViewModel), "Main", null);
         }
 
         public void NavigateToView(string modelName)
@@ -96,73 +153,171 @@ namespace BookStoreManagement.ViewModels
             switch(modelName)
             {
                 case "About":
-                    IsMenuEnable = false;
                     navigationService.NavigateToViewModel<AboutViewModel>();
-                    IsMenuEnable = true;
                     break;
-                case "Settings":
-                    IsMenuEnable = false;
+                case "Setings":
                     navigationService.NavigateToViewModel<SettingsViewModel>();
-                    IsMenuEnable = true;
                     break;
                 case "FindBook":
-                    IsMenuEnable = false;
                     navigationService.NavigateToViewModel<FindBookViewModel>();
-                    IsMenuEnable = true;
+                    break;
+                case "GHome":
+                    navigationService.NavigateToViewModel<HomeViewModel>("Guest");
+                    break;
+                case "NHome":
+                    navigationService.NavigateToViewModel<HomeViewModel>("NotGuest");
                     break;
                 default:
-                    IsMenuEnable = false;
                     navigationService.NavigateToViewModel<ErrorViewModel>();
-                    IsMenuEnable = true;
                     break;
             }
         }
 
-        public void Login(string user)
+        public void ShowLoginPage()
         {
-            if (user == "customer")
-            {
-                IsCustomer = true;
-                NotifyOfPropertyChange("IsCustomer");
-            }
-            else
-            {
-                if (user == "user")
-                {
-                    IsEmployees = true;
-                    NotifyOfPropertyChange("IsEmployees");
-                }
-                else
-                {
-                    if (user == "admin")
-                    {
-                        IsEmployees = true;
-                        NotifyOfPropertyChange("IsEmployees");
-                        IsAdmin = true;
-                        NotifyOfPropertyChange("IsAdmin");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Thông tin đăng nhập chưa chính xác");
-                        return;
-                    }
-                }
-            }
-            IsDialogOpen = false;
-            IsLog = true;
-            User = user;
-            IsMenuEnable = false;
-            navigationService.NavigateToViewModel<FindBookViewModel>();
-            IsMenuEnable = true;
+            DialogContent = new Views.UserControl.Login();
+            DialogContent.DataContext = this;
+            IsDialogOpen = true;
+            LoginMessage = string.Empty;
+            LoginButtonEnable = true;
         }
-        public void Login()
+
+        private void SetMenuItemForGuest()
         {
-            IsDialogOpen = false;
-            IsLog = true;
-            User = "Guest.";
-            IsMenuEnable = false;
-            navigationService.NavigateToViewModel<FindBookViewModel>();
-            IsMenuEnable = true;
+            HamburgerMenuIconItem home = new HamburgerMenuIconItem();
+            home.Label = "Home";
+            home.Tag = "GHome";
+            home.Icon = new PackIcon() { Kind = PackIconKind.Home };
+            MenuItems.Add(home);
+            MenuSelectedIndex = 0;
+        }
+        private void SetMenuItemForCustomer()
+        {
+            HamburgerMenuIconItem home = new HamburgerMenuIconItem();
+            home.Label = "Home";
+            home.Tag = "NHome";
+            home.Icon = new PackIcon() { Kind = PackIconKind.Home };
+            MenuItems.Add(home);
+            MenuSelectedIndex = 0;
+        }
+        private void SetMenuItemForEmploy()
+        {
+            HamburgerMenuIconItem home = new HamburgerMenuIconItem();
+            home.Label = "Home";
+            home.Tag = "NHome";
+            home.Icon = new PackIcon() { Kind = PackIconKind.Home };
+            MenuItems.Add(home);
+            HamburgerMenuIconItem qlk = new HamburgerMenuIconItem();
+            qlk.Label = "Quản lý kho";
+            qlk.Tag = "StoreMG";
+            qlk.Icon = new PackIcon() { Kind = PackIconKind.Store };
+            MenuItems.Add(qlk);
+            HamburgerMenuIconItem qlkh = new HamburgerMenuIconItem();
+            qlkh.Label = "Quản lý khách hàng";
+            qlkh.Tag = "CustomerMG";
+            qlkh.Icon = new PackIcon() { Kind = PackIconKind.Account };
+            MenuItems.Add(qlkh);
+            HamburgerMenuIconItem hd = new HamburgerMenuIconItem();
+            hd.Label = "Hóa đơn";
+            hd.Tag = "Hoadon";
+            hd.Icon = new PackIcon() { Kind = PackIconKind.Details };
+            MenuItems.Add(hd);
+            MenuSelectedIndex = 0;
+        }
+        private void SetMenuItemForMG()
+        {
+            HamburgerMenuIconItem home = new HamburgerMenuIconItem();
+            home.Label = "Home";
+            home.Tag = "NHome";
+            home.Icon = new PackIcon() { Kind = PackIconKind.Home };
+            MenuItems.Add(home);
+            HamburgerMenuIconItem qlnv = new HamburgerMenuIconItem();
+            qlnv.Label = "Quan lý nhân viên";
+            qlnv.Tag = "MGHome";
+            qlnv.Icon = new PackIcon() { Kind = PackIconKind.Halloween };
+            MenuItems.Add(qlnv);
+            HamburgerMenuIconItem qlk = new HamburgerMenuIconItem();
+            qlk.Label = "Quản lý kho";
+            qlk.Tag = "StoreMG";
+            qlk.Icon = new PackIcon() { Kind = PackIconKind.Store };
+            MenuItems.Add(qlk);
+            HamburgerMenuIconItem qlkh = new HamburgerMenuIconItem();
+            qlkh.Label = "Quản lý khách hàng";
+            qlkh.Tag = "CustomerMG";
+            qlkh.Icon = new PackIcon() { Kind = PackIconKind.Account };
+            MenuItems.Add(qlkh);
+            HamburgerMenuIconItem hd = new HamburgerMenuIconItem();
+            hd.Label = "Hóa đơn";
+            hd.Tag = "Hoadon";
+            hd.Icon = new PackIcon() { Kind = PackIconKind.Details };
+            MenuItems.Add(hd);
+            HamburgerMenuIconItem tk = new HamburgerMenuIconItem();
+            tk.Label = "Thống kê";
+            tk.Tag = "TK";
+            tk.Icon = new PackIcon() { Kind = PackIconKind.Graphql };
+            MenuItems.Add(tk);
+            MenuSelectedIndex = 0;
+        }
+
+        public async void Login()
+        {
+            LoginButtonEnable = false;
+            bool? checkLogin = await Task<bool?>.Factory.StartNew(() => dataProvider.CheckAccount(User, password));
+            if(checkLogin == true)
+            {
+                LoginMessage = "Đăng nhập thành công.";
+                IsDialogOpen = false;
+                dataProvider.IsGuest = false;
+                NotifyOfPropertyChange("IsAdmin");
+                NotifyOfPropertyChange("IsEmployees");
+                NotifyOfPropertyChange("IsCustomer");
+                NotifyOfPropertyChange("IsSignin");
+                NotifyOfPropertyChange("IsSignout");
+                NotifyOfPropertyChange("Name");
+                if(IsAdmin)
+                {
+                    SetMenuItemForMG();
+                    return;
+                }
+                if(IsEmployees)
+                {
+                    SetMenuItemForEmploy();
+                    return;
+                }
+                SetMenuItemForCustomer();
+            }
+            if (checkLogin == false)
+            {
+                LoginMessage = "Sai mật khẩu.";
+            }
+            if (checkLogin == null)
+            {
+                LoginMessage = "Không tìm thấy tài khoản.";
+            }
+            LoginButtonEnable = true;
+        }
+
+        public void Logout()
+        {
+            dataProvider.IsAdmin = false;
+            dataProvider.IsCustomer = false;
+            dataProvider.IsEmploy = false;
+            dataProvider.IsGuest = true;
+            dataProvider.UserName = "Khách";
+            NotifyOfPropertyChange("IsAdmin");
+            NotifyOfPropertyChange("IsEmployees");
+            NotifyOfPropertyChange("IsCustomer");
+            NotifyOfPropertyChange("IsSignin");
+            NotifyOfPropertyChange("IsSignout");
+            NotifyOfPropertyChange("Name");
+            NavigateToView("About");
+            MenuItems.Clear();
+            SetMenuItemForGuest();
+        }
+
+        public void HamburgerMenuControl_OnItemInvoked(HamburgerMenuItemInvokedEventArgs e)
+        {
+            NavigateToView((e.InvokedItem as HamburgerMenuItem)?.Tag.ToString());
         }
         #endregion
     }

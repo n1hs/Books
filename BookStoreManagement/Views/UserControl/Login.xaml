@@ -2,50 +2,67 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:hp="clr-namespace:BookStoreManagement.Assets.Helper"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Grid MinWidth="450"
-          MinHeight="330">
+    <Grid Width="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="15">
+        <StackPanel Margin="15 5">
             <TextBlock Text="Đăng nhập"
                        HorizontalAlignment="Center"
                        Margin="10"
                        Style="{StaticResource MaterialDesignTitleTextBlock}" />
             <TextBox Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"
                      VerticalAlignment="Top"
-                     AcceptsReturn="False"
-                     TextWrapping="Wrap"
-                     x:Name="Username"
+                     Text="{Binding User, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                     MaxLength="20"
                      MaxWidth="400"
                      md:HintAssist.Hint="Tên đăng nhập"
                      Margin="5" />
             <PasswordBox Style="{StaticResource MaterialDesignFilledPasswordFieldPasswordBox}"
                          VerticalAlignment="Top"
-                         IsEnabled="False"
                          MaxWidth="400"
+                         MaxLength="20"
                          md:HintAssist.Hint="Mật khẩu"
+                         PasswordChar="*"
+                         hp:PasswordBoxAssistant.BindPassword="True"
+                         hp:PasswordBoxAssistant.BoundPassword="{Binding Password, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                          Margin="5" />
+        </StackPanel>
+        <Grid Grid.Row="1"
+              IsEnabled="{Binding LoginButtonEnable, UpdateSourceTrigger=PropertyChanged}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
             <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Width="130"
                     Margin="5 10"
                     Content="Đăng nhập"
-                    cal:Message.Attach="Login(Username.Text)"
+                    cal:Message.Attach="Login()"
                     ToolTip="Đăng nhập với tư cách thành viên" />
+            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Grid.Column="1"
+                    IsCancel="True"
+                    Width="130"
+                    Margin="5 10"
+                    Content="Thoát"
+                    Command="md:DialogHost.CloseDialogCommand">
+                <Button.CommandParameter>
+                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                        False
+                    </system:Boolean>
+                </Button.CommandParameter>
+            </Button>
+        </Grid>
 
-        </StackPanel>
-        <TextBlock Text="------- Hoặc -------"
-                   HorizontalAlignment="Center"
-                   Grid.Row="1" />
-        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                Grid.Row="2"
-                Width="130"
-                Margin="10"
-                Content="Guest"
-                cal:Message.Attach="Login()"
-                ToolTip="Đăng nhập với tư cách khách" />
+        <TextBlock TextAlignment="Center"
+                   Margin="5"
+                   Grid.Row="2"
+                   Text="{Binding LoginMessage}" />
     </Grid>
 </UserControl>

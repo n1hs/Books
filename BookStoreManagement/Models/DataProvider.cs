@@ -5,11 +5,11 @@ namespace BookStoreManagement.Models
 {
     public class DataProvider
     {
-        public string UserName { get; private set; }
-        public bool IsAdmin { get; private set; }
-        public bool IsEmploy { get; private set; }
-        public bool IsCustomer { get; private set; }
-        public bool IsGuest { get; private set; }
+        public string UserName { get; set; }
+        public bool IsAdmin { get; set; }
+        public bool IsEmploy { get;  set; }
+        public bool IsCustomer { get;  set; }
+        public bool IsGuest { get;  set; }
 
         private IReponsitory<Sach> _bookReponsitory;
         public IReponsitory<Sach> BookReponsitory { 
@@ -29,25 +29,66 @@ namespace BookStoreManagement.Models
                 return _accountReponsitory;
             }
         }
-        internal void CheckAccount(string User, string Password)
+
+        private IReponsitory<KhachHang> _customerReponsitory;
+        public IReponsitory<KhachHang> CustomerReponsitory
+        {
+            get
+            {
+                if (_customerReponsitory is null)
+                    _customerReponsitory = new CustomerReponsitory();
+                return _customerReponsitory;
+            }
+        }
+
+        /// <summary>
+        /// Kiem tra tai khoan dang nhap
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Password"></param>
+        /// <returns>
+        /// True - thanh cong
+        /// Fasle - Sai mat khau
+        /// Null - Khong tim thay
+        /// </returns>
+        internal bool? CheckAccount(string User, string Password)
         {
             if(AccountReponsitory.Store == null)
             {
                 AccountReponsitory.GetAll();
             }
             NhanVien nhanVien = AccountReponsitory.Find(User);
-            if (nhanVien != null)
+            if (nhanVien != null )
             {
-                UserName = nhanVien.UserName;
+                if (nhanVien.PassWord.ToLower() != Assets.Helper.Sercurity.CalculateMD5Hash(Password).ToLower())
+                    return false;
+                UserName = nhanVien.Name;
                 if(nhanVien.QuanLy == true)
                 {
                     IsAdmin = true;
                 }
                 IsEmploy = true;
-                return;
+                IsCustomer = false;
+                IsGuest = false;
+                return true; ;
             }
-            UserName = string.Empty;
+
+            KhachHang khachHang = CustomerReponsitory.Find(User);
+            if (khachHang != null)
+            {
+                if (khachHang.Password.ToLower() != Assets.Helper.Sercurity.CalculateMD5Hash(Password).ToLower())
+                    return false;
+                UserName = khachHang.TenKH;
+                IsAdmin = false;
+                IsEmploy = false;
+                IsCustomer = true;
+                IsGuest = false;
+                return true; ;
+            }
+
+            UserName = "Khách";
             IsGuest = true;
+            return null;
         }
     }
 }

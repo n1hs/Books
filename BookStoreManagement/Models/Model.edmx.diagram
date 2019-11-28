@@ -7,6 +7,7 @@
       <Diagram DiagramId="2a992a749bb64353b9f58fba66a7b130" Name="Diagram1">
         <EntityTypeShape EntityType="DatabaseModel.NhanVien" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Sach" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.KhachHang" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

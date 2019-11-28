@@ -9,8 +9,8 @@ namespace BookStoreManagement.Models
         BindableCollection<T> Store { set; get; }
         void GetAll();
         void Add(T newItem);
-        void Edit(T item, object key);
+        void Edit(T item, string key);
         void Delete(T item);
-        T Find(object key);
+        T Find(string key);
     }
 }

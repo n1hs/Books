@@ -27,5 +27,6 @@ namespace BookStoreManagement.Models
     
         public virtual DbSet<NhanVien> NhanViens { get; set; }
         public virtual DbSet<Sach> Saches { get; set; }
+        public virtual DbSet<KhachHang> KhachHangs { get; set; }
     }
 }

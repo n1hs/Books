@@ -109,10 +109,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Assets\Helper\MD5Encode.cs" />
+    <Compile Include="Assets\Helper\PasswordBoxAssistant.cs" />
     <Compile Include="Models\AccountRepensitory.cs" />
     <Compile Include="Models\BookReponsitory.cs" />
+    <Compile Include="Models\CustomerReponsitory.cs" />
     <Compile Include="Models\DataProvider.cs" />
     <Compile Include="Models\IReponsitory.cs" />
+    <Compile Include="Models\KhachHang.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Model.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -136,6 +142,7 @@
     </Compile>
     <Compile Include="StartUp\INavigationServiceEx.cs" />
     <Compile Include="ViewModels\ErrorViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\IShell.cs" />
     <Compile Include="ViewModels\MainPage\FindBookViewModel.cs" />
     <Compile Include="ViewModels\OptionsPage\AboutViewModel.cs" />
@@ -190,6 +197,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\HomeView\NotGuest.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\HomeView\Guest.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainPage\FindBookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -218,9 +233,7 @@
     <Resource Include="Resources\Img\4.png" />
     <Resource Include="Resources\Img\5.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Img\LogoUIT.png" />
   </ItemGroup>

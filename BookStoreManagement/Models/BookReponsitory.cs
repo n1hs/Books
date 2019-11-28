@@ -31,12 +31,12 @@ namespace BookStoreManagement.Models
             throw new NotImplementedException();
         }
 
-        public void Edit(Sach item, object key)
+        public void Edit(Sach item, string key)
         {
             throw new NotImplementedException();
         }
 
-        public Sach Find(object key)
+        public Sach Find(string key)
         {
             throw new NotImplementedException();
         }

@@ -134,13 +134,13 @@
         </md:Card>
 
         <md:Card Grid.Column="1"
-                 MaxWidth="200"
+                 Width="200"
                  VerticalAlignment="Center"
                  Visibility="{Binding RighPaneVisibility, Mode=OneWay}"
                  Grid.Row="1">
-            <StackPanel HorizontalAlignment="Center"
-                        Margin="15"
-                        VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Left"
+                        Margin="5"
+                        VerticalAlignment="Top">
                 <Image Source="{Binding ElementName=ListBook, Path=SelectedItem.Anh}" />
                 <TextBlock TextWrapping="Wrap"
                            Margin="5"

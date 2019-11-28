@@ -1,8 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:materialDesignConverters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/HamburgerMenuTemplate.xaml" />
+    </ResourceDictionary.MergedDictionaries>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+    <materialDesignConverters:BrushRoundConverter x:Key="BrushRoundConverter" />
     <ControlTemplate TargetType="{x:Type MenuItem}"
                      x:Key="TopItemTemplate">
         <Border BorderBrush="Transparent"
@@ -56,4 +62,26 @@
             </Trigger>            
         </ControlTemplate.Triggers>
     </ControlTemplate>
+
+    <!--  This is the template for the menu items.  -->
+    <DataTemplate x:Key="MenuItemTemplate"
+                  DataType="{x:Type Controls:HamburgerMenuIconItem}">
+        <Grid Height="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ContentControl Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{Binding Icon}"
+                            Focusable="False"
+                            IsTabStop="False" />
+            <TextBlock Grid.Column="1"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Text="{Binding Label}" />
+        </Grid>
+    </DataTemplate>
+
 </ResourceDictionary>
